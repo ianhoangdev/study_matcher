@@ -183,10 +183,37 @@ void searchSingleUFID(const std::vector<Student>& students) {
         return;
     }
 
-    for (const auto& [id, score] : matches) {
-        std::cout << "  UFID: " << id << ", Score: " << score << "\n";
+    for (const auto& [matchUfid, score] : matches) {
+        const Student& match = studentMap[matchUfid];
+
+        std::vector<std::string> sharedCourses;
+        for (const auto& c : student.courses) {
+            if (match.courses.count(c)) sharedCourses.push_back(c);
+        }
+
+        std::vector<std::string> sharedPrefs;
+        if (student.prefs.environment == match.prefs.environment)
+            sharedPrefs.push_back("environment");
+        if (student.prefs.group_size == match.prefs.group_size)
+            sharedPrefs.push_back("group_size");
+        if (student.prefs.study_style == match.prefs.study_style)
+            sharedPrefs.push_back("study_style");
+
+        std::cout << "\nUFID: " << matchUfid << ", Score: " << score << "\n";
+        std::cout << "   Shared Courses: ";
+        if (sharedCourses.empty()) std::cout << "(none)";
+        else for (size_t i = 0; i < sharedCourses.size(); ++i)
+            std::cout << sharedCourses[i] << (i + 1 < sharedCourses.size() ? ", " : "");
+        std::cout << "\n";
+
+        std::cout << "   Shared Preferences: ";
+        if (sharedPrefs.empty()) std::cout << "(none)";
+        else for (size_t i = 0; i < sharedPrefs.size(); ++i)
+            std::cout << sharedPrefs[i] << (i + 1 < sharedPrefs.size() ? ", " : "");
+        std::cout << "\n";
     }
 }
+
 
 
 int main() {
