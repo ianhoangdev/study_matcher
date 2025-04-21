@@ -128,6 +128,11 @@ void searchSingleUFID(const std::vector<Student>& students) {
         return;
     }
 
+    std::unordered_map<int, Student> studentMap;
+    for (const auto& s : students) {
+        studentMap[s.ufid] = s;
+    }
+
     HashMatcher hashMatcher;
     GraphMatcher graphMatcher;
     for (const auto& s : students) {
@@ -146,22 +151,43 @@ void searchSingleUFID(const std::vector<Student>& students) {
     int ufid;
     std::cin >> ufid;
 
+    if (!studentMap.count(ufid)) {
+        std::cerr << "UFID not found in the dataset.\n";
+        return;
+    }
+
+    const Student& student = studentMap[ufid];
+    std::cout << "\nStudent Info:\n";
+    std::cout << "UFID: " << student.ufid << "\n";
+    std::cout << "Courses: ";
+    for (auto it = student.courses.begin(); it != student.courses.end(); ++it) {
+        std::cout << *it;
+        if (std::next(it) != student.courses.end()) std::cout << ", ";
+    }
+    std::cout << "\nPreferences:\n";
+    std::cout << "  - Environment: " << student.prefs.environment << "\n";
+    std::cout << "  - Group Size : " << student.prefs.group_size << "\n";
+    std::cout << "  - Study Style: " << student.prefs.study_style << "\n";
+
+    std::cout << "\nTop Matches:\n";
+    std::vector<std::pair<int, int>> matches;
+
     if (matcherChoice == 1) {
-        auto matches = hashMatcher.findTopMatches(ufid);
-        std::cout << "\nHashMatcher Top Matches for UFID " << ufid << ":\n";
-        for (const auto& [id, score] : matches) {
-            std::cout << "  UFID: " << id << ", Score: " << score << "\n";
-        }
+        matches = hashMatcher.findTopMatches(ufid);
+        std::cout << "Using HashMatcher:\n";
     } else if (matcherChoice == 2) {
-        auto matches = graphMatcher.findTopMatches(ufid);
-        std::cout << "\nGraphMatcher Top Matches for UFID " << ufid << ":\n";
-        for (const auto& [id, score] : matches) {
-            std::cout << "  UFID: " << id << ", Score: " << score << "\n";
-        }
+        matches = graphMatcher.findTopMatches(ufid);
+        std::cout << "Using GraphMatcher:\n";
     } else {
         std::cout << "Invalid matcher choice.\n";
+        return;
+    }
+
+    for (const auto& [id, score] : matches) {
+        std::cout << "  UFID: " << id << ", Score: " << score << "\n";
     }
 }
+
 
 int main() {
     std::vector<Student> students;
