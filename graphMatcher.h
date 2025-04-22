@@ -6,19 +6,18 @@
 #include <vector>
 #include <set>
 #include <string>
+using namespace std;
 
 class GraphMatcher {
 public:
     void addStudent(const Student& s);
-    std::vector<std::pair<int, int>> findTopMatches(int ufid, int topN = 5);
+    vector<pair<int, int>> findTopMatches(int ufid, int topN = 5);
 
 private:
-    std::unordered_map<int, Student> students;
-    std::unordered_map<int, std::unordered_map<int, int>> edges;
-    std::unordered_map<std::string, std::unordered_set<int>> courseMap;
+    unordered_map<int, Student> students;
+    unordered_map<int, vector<pair<int,int>>> edges;
+    unordered_map<string, vector<int>> courseMap;
+    unordered_map<string, vector<int>> envMap, groupMap, styleMap;
     const int courseWeight = 10;
     const int prefWeight = 5;
-
-    int countCourseOverlap(const std::set<std::string>& a, const std::set<std::string>& b) const;
-    int countPreferenceOverlap(const Preferences& a, const Preferences& b) const;
 };

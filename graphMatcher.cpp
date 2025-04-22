@@ -3,55 +3,40 @@
 #include <unordered_set>
 
 void GraphMatcher::addStudent(const Student& s) {
-    std::unordered_set<int> compared;
-    for (const auto& course : s.courses) {
-        for (int otherUfid : courseMap[course]) {
-            if (compared.count(otherUfid)) continue;
-            compared.insert(otherUfid);
+    std::unordered_map<int,int> weightAcc;
+    
+    for (auto& c : s.courses)
+    for (int o : courseMap[c])
+        weightAcc[o] += courseWeight;
 
-            const Student& otherStudent = students[otherUfid];
-            int courseOverlap = countCourseOverlap(s.courses, otherStudent.courses);
-            int prefOverlap = countPreferenceOverlap(s.prefs, otherStudent.prefs);
-            int weight = courseOverlap * courseWeight + prefOverlap * prefWeight;
+    for (int o : envMap[s.prefs.environment])
+        weightAcc[o] += prefWeight;
+    for (int o : groupMap[s.prefs.group_size])
+        weightAcc[o] += prefWeight;
+    for (int o : styleMap[s.prefs.study_style])
+        weightAcc[o] += prefWeight;
 
-            if (weight > 0) {
-                edges[s.ufid][otherUfid] = weight;
-                edges[otherUfid][s.ufid] = weight;
-            }
+    for (auto& [o, w] : weightAcc) {
+        if (w > 0) {
+        edges[s.ufid].emplace_back(o, w);
+        edges[o].emplace_back(s.ufid, w);
         }
-        courseMap[course].insert(s.ufid);
     }
+
+    for (auto& c : s.courses)  courseMap[c].push_back(s.ufid);
+    envMap[s.prefs.environment].push_back(s.ufid);
+    groupMap[s.prefs.group_size].push_back(s.ufid);
+    styleMap[s.prefs.study_style].push_back(s.ufid);
+    
     students[s.ufid] = s;
 }
 
 std::vector<std::pair<int, int>> GraphMatcher::findTopMatches(int ufid, int topN) {
-    std::vector<std::pair<int, int>> result;
-    if (!edges.count(ufid)) return result;
-
-    for (const auto& [neighbor, weight] : edges[ufid]) {
-        result.emplace_back(neighbor, weight);
-    }
-
-    std::sort(result.begin(), result.end(), [](auto& a, auto& b) {
-        return b.second < a.second; // descending
-    });
-
+    auto it = edges.find(ufid);
+    if (it == edges.end()) return {};
+    auto result = it->second;                      
+    sort(result.begin(), result.end(),
+            [](auto &a, auto &b){ return a.second > b.second; });
     if (result.size() > topN) result.resize(topN);
     return result;
-}
-
-int GraphMatcher::countCourseOverlap(const std::set<std::string>& a, const std::set<std::string>& b) const {
-    int count = 0;
-    for (const auto& course : a) {
-        if (b.count(course)) count++;
-    }
-    return count;
-}
-
-int GraphMatcher::countPreferenceOverlap(const Preferences& a, const Preferences& b) const {
-    int count = 0;
-    if (a.environment == b.environment) count++;
-    if (a.group_size == b.group_size) count++;
-    if (a.study_style == b.study_style) count++;
-    return count;
 }
