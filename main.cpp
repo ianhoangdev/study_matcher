@@ -139,7 +139,7 @@ void searchSingleUFID(const vector<Student>& students) {
     GraphMatcher graphMatcher;
     for (const auto& s : students) {
         hashMatcher.addStudent(s);
-        //graphMatcher.addStudent(s);
+        graphMatcher.addStudent(s);
     }
 
     cout << "\nChoose matcher:\n";

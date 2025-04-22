@@ -2,16 +2,18 @@
 
 #include "types.h"
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 #include <set>
 #include <string>
+#include <algorithm>
+#include <utility>
 using namespace std;
 
 class GraphMatcher {
 public:
     void addStudent(const Student& s);
     vector<pair<int, int>> findTopMatches(int ufid, int topN = 5);
+    GraphMatcher();
 
 private:
     unordered_map<int, Student> students;

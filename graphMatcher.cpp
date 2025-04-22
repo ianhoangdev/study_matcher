@@ -1,9 +1,16 @@
 #include "graphMatcher.h"
-#include <algorithm>
-#include <unordered_set>
+
+GraphMatcher::GraphMatcher() {
+    edges.reserve(100000);
+    courseMap.reserve(1000);
+    envMap.reserve(1000);
+    groupMap.reserve(1000);
+    styleMap.reserve(1000);
+    students.reserve(100000);
+}
 
 void GraphMatcher::addStudent(const Student& s) {
-    std::unordered_map<int,int> weightAcc;
+    unordered_map<int,int> weightAcc;
     
     for (auto& c : s.courses)
     for (int o : courseMap[c])
