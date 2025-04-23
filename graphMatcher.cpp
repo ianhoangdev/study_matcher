@@ -1,7 +1,7 @@
 #include "graphMatcher.h"
 
-
 // Graph Matching class
+//100000 entries required
 GraphMatcher::GraphMatcher() {
     edges.reserve(100000);
     courseMap.reserve(1000);
@@ -10,6 +10,8 @@ GraphMatcher::GraphMatcher() {
     styleMap.reserve(1000);
     students.reserve(100000);
 }
+
+//The function to add student object for the graph matching class
 
 void GraphMatcher::addStudent(const Student& s) {
     unordered_map<int,int> weightAcc;
@@ -39,6 +41,8 @@ void GraphMatcher::addStudent(const Student& s) {
     
     students[s.ufid] = s;
 }
+
+//Function used to find top matches
 
 std::vector<std::pair<int, int>> GraphMatcher::findTopMatches(int ufid, int topN) {
     auto it = edges.find(ufid);
