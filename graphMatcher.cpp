@@ -1,5 +1,7 @@
 #include "graphMatcher.h"
 
+
+// Graph Matching class
 GraphMatcher::GraphMatcher() {
     edges.reserve(100000);
     courseMap.reserve(1000);
