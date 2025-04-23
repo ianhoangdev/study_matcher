@@ -8,14 +8,19 @@
 #include <random>
 #include <algorithm>
 
+//This is our function to generate random student dataset, which includes courses
+//UFID number and student study preferences
 void generateDataCSV(const std::string& filename, int count = 50) {
     std::vector<std::string> coursePool = {
         "COP3502", "MAC2311", "PHY2048", "CIS4930", "STA2023",
         "COP3530", "CDA3101", "CEN3031", "EEL3701", "COP4600"
     };
+    //We include ten courses in the coursePool
+
     std::vector<std::string> environments = {"quiet", "moderate", "lively"};
     std::vector<std::string> groupSizes = {"small", "medium", "large"};
     std::vector<std::string> studyStyles = {"focused", "casual", "interactive"};
+    //study preferences options are stored as strings
 
     std::ofstream file(filename);
     if (!file.is_open()) {
