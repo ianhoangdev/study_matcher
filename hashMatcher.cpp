@@ -1,6 +1,7 @@
 #include "hashMatcher.h"
 #include <algorithm>
 
+//A function used to add Student object
 void HashMatcher::addStudent(const Student& s) {
     students[s.ufid] = s;
     for (const auto& course : s.courses) {
@@ -8,6 +9,7 @@ void HashMatcher::addStudent(const Student& s) {
     }
 }
 
+//Function used to find Top Matches for students
 std::vector<std::pair<int, int>> HashMatcher::findTopMatches(int ufid, int topN) {
     std::vector<std::pair<int, int>> result;
     if (!students.count(ufid)) return result;
@@ -38,6 +40,7 @@ std::vector<std::pair<int, int>> HashMatcher::findTopMatches(int ufid, int topN)
     return result;
 }
 
+//Count the number of course overlap which will be useful for future calculation
 int HashMatcher::countCourseOverlap(const std::set<std::string>& a, const std::set<std::string>& b) const {
     int count = 0;
     for (const auto& course : a) {
@@ -46,6 +49,7 @@ int HashMatcher::countCourseOverlap(const std::set<std::string>& a, const std::s
     return count;
 }
 
+//Count the number of study preference overlap which will be useful for future calculation
 int HashMatcher::countPreferenceOverlap(const Preferences& a, const Preferences& b) const {
     int count = 0;
     if (a.environment == b.environment) count++;
