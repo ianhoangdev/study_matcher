@@ -23,7 +23,7 @@ Student parseStudentLine(const string& line) {
     getline(ss, group, ',');
     getline(ss, style, ',');
 
-    int ufid = stoi(ufidStr);
+    int ufid = stoi(ufidStr); //ufid is stored as an integer
     set<string> courses;
     stringstream courseSS(coursesStr);
     string course;
@@ -73,6 +73,7 @@ void generateDataFlow() {
     cout << "Generated " << count << " students and saved to data.csv!\n\n";
 }
 
+//When we are comparing, we take the first input as the standard
 void compareMatchersFlow() {
     const string filename = "data.csv";
     vector<Student> students = loadStudents(filename);
@@ -122,7 +123,7 @@ void compareMatchersFlow() {
     cout << "\nJaccard Similarity of Top Matches: " << similarity << "\n\n";
 }
 
-
+//Searching single UFID function
 
 void searchSingleUFID(const vector<Student>& students) {
     if (students.empty()) {
@@ -216,7 +217,7 @@ void searchSingleUFID(const vector<Student>& students) {
     }
 }
 
-
+//Main part
 
 int main() {
     vector<Student> students;
